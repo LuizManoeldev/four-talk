@@ -13,13 +13,13 @@ public class Grupo extends Participante {
 	public ArrayList<Individual> getIndividuos() {
 		return individuos;
 	}
-
-	public void setIndividuos(ArrayList<Individual> individuos) {
-		this.individuos = individuos;
-	}
 	
 	public void adicionar(Individual individuo) {
 		individuos.add(individuo);
+	}
+	
+	public void remover(Individual individuo) {
+		individuos.remove(individuo);
 	}
 	
 	

@@ -36,15 +36,19 @@ public class Individual extends Participante {
 		return grupos;
 	}
 
-	public void setGrupos(ArrayList<Grupo> grupos) {
-		this.grupos = grupos;
+	public void addGrupo(Grupo grupo) {
+		this.grupos.add(grupo);
+	}
+	
+	public void removerGrupo(Grupo grupo) {
+		this.grupos.remove(grupo);
 	}
 	
 	public Grupo localizarGrupo(String nome) {
 		Grupo grupo = null;
 		
 		for(Grupo g : grupos) {
-			if(g.getNome().equals(nome)) { grupo = g;}
+			if(g.getNome()== nome) { grupo = g;}
 		}
 		return grupo;
 	}
