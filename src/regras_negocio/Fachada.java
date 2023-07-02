@@ -140,7 +140,7 @@ public class Fachada {
 		grupo.remover(individuo);
 	}
 
-
+	
 	public static void criarMensagem(String nomeemitente, String nomedestinatario, String texto) throws Exception{
 		if(texto.isEmpty()) 
 			throw new Exception("criar mensagem - texto vazio:");
@@ -156,16 +156,33 @@ public class Fachada {
 		if(destinatario instanceof Grupo g && emitente.localizarGrupo(g.getNome())== null)
 			throw new Exception("criar mensagem - grupo nao permitido:" + nomedestinatario);
 
-
-		//cont.
 		//gerar id no repositorio para a mensagem -- Pegar o ultimo id += 1
-		//criar mensagem
-		//adicionar mensagem ao emitente e destinatario
-		//adicionar mensagem ao repositorio
-		//
-		//caso destinatario seja tipo Grupo então criar copias da mensagem, tendo o grupo como emitente e cada membro do grupo como destinatario, 
-		//  usando mesmo id e texto, e adicionar essas copias no repositorio
+		int id = repositorio.maiorId();
 		
+		//criar mensagem
+		Mensagem mensagem = new Mensagem(id, emitente,destinatario ,texto);
+		
+		//adicionar mensagem ao emitente e destinatario
+		emitente.addEnviada(mensagem);
+		destinatario.addRecebida(mensagem);
+		
+		//adicionar mensagem ao repositorio
+		repositorio.adicionar(mensagem);
+		
+		//caso destinatario seja tipo Grupo então criar copias da mensagem, tendo o grupo como emitente e cada membro do grupo como destinatario, 
+		if(destinatario instanceof Grupo) {
+			Grupo grupo = (Grupo) destinatario;
+			// Mudando o formato da mensagem para = nome/texto
+			String nova_mensagem = emitente.getNome() + "/" + mensagem.getTexto();
+			mensagem.setTexto(nova_mensagem);
+			
+			for(Individual ind : grupo.getIndividuos()) {
+				if(ind.equals(emitente) == false)
+					ind.addRecebida(mensagem);
+				//  usando mesmo id e texto, e adicionar essas copias no repositorio
+				repositorio.adicionar(mensagem);
+			}	
+		}
 	}
 
 	public static ArrayList<Mensagem> obterConversa(String nomeindividuo, String nomedestinatario) throws Exception{

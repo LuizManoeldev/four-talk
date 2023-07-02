@@ -180,6 +180,19 @@ public class Repositorio {
 		
 	}
 	
+	public void remover(Object objeto) {
+		if (objeto instanceof Individual) {
+			participantes.remove(((Individual) objeto).getNome());
+			
+		}else if(objeto instanceof Grupo) {
+			participantes.remove(((Grupo) objeto).getNome());
+			
+		}else {
+			mensagens.remove(((Mensagem) objeto).getId());
+		}
+		
+	}
+	
 	public ArrayList<Grupo> getGrupos() {
 		ArrayList<Grupo> grupos = new ArrayList<Grupo>();
 		for(Participante p : participantes.values()) {
@@ -206,6 +219,14 @@ public class Repositorio {
 			ListaDeMensagens.add(m);
 		}
 		return ListaDeMensagens;
+	}
+	
+	public int maiorId() {
+		int maiorId = 0;
+		for(Mensagem m : mensagens.values()) {
+			if(m.getId() > maiorId) { maiorId = m.getId();}
+		}
+		return maiorId;
 	}
 	
 	

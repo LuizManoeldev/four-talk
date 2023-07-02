@@ -24,8 +24,28 @@ public class Participante {
 		return recebidas;
 	}
 
-	public void setRecebidas(ArrayList<Mensagem> recebidas) {
-		this.recebidas = recebidas;
+	public void addRecebida(Mensagem mensagem) {
+		this.recebidas.add(mensagem);
+	}
+	
+	public void addEnviada(Mensagem mensagem) {
+		this.enviadas.add(mensagem);
+	}
+	
+	public void removerRecebida(Mensagem mensagem) {
+		this.recebidas.remove(mensagem);
+	}
+	
+	public void removerEnviada(Mensagem mensagem) {
+		this.enviadas.remove(mensagem);
+	}
+	
+	public Mensagem localizarEnviada(int id) {
+		Mensagem msg = null;
+		for(Mensagem m : enviadas ) {
+			if(m.getId() == id) { msg = m;}
+		}
+		return msg;
 	}
 
 	public ArrayList<Mensagem> getEnviadas() {
@@ -36,6 +56,9 @@ public class Participante {
 		this.enviadas = enviadas;
 	}
 	
+	public String toString() {
+		return "nome= " + nome;
+	}
 	//remover enviadas
 	//remover recebidas
 	

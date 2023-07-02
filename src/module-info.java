@@ -1,9 +1,0 @@
-/**
- * 
- */
-/**
- * @author luizm
- *
- */
-module FourTalk {
-}

@@ -1,7 +1,7 @@
 /**********************************
  * IFPB - Curso Superior de Tec. em Sist. para Internet
  * Pesist~encia de Objetos
- * Prof. Fausto Maranhão Ayres
+ * Prof. Fausto Maranhï¿½o Ayres
  **********************************/
 
 package appswing;
@@ -117,14 +117,14 @@ public class TelaConversa {
 						int id = (int) table.getValueAt(table.getSelectedRow(), 0); // 0=nome
 
 						Object[] options = { "Confirmar", "Cancelar" };
-						int escolha = JOptionPane.showOptionDialog(null, "Esta operação apagará a mensagem", "Alerta",
+						int escolha = JOptionPane.showOptionDialog(null, "Esta operaï¿½ï¿½o apagarï¿½ a mensagem", "Alerta",
 								JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[1]);
 						if (escolha == 0) {
 							Fachada.apagarMensagem(TelaPrincipal.logado.getNome(), id);
 							listagem();
-							label.setText("exclusão realizada");
+							label.setText("exclusï¿½o realizada");
 						} else
-							label.setText("exclusão cancelada");
+							label.setText("exclusï¿½o cancelada");
 					}
 				} catch (Exception ex) {
 					label.setText(ex.getMessage());

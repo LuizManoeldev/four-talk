@@ -49,13 +49,15 @@ public class Mensagem {
 		Destinatario = destinatario;
 	}
 
-	public LocalDateTime getDatahora() {
+	public LocalDateTime getData() {
 		return datahora;
 	}
 
 	public void setDatahora(LocalDateTime datahora) {
 		this.datahora = datahora;
 	}
+	
+	
 	
 	
 	
