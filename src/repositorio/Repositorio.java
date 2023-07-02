@@ -226,7 +226,7 @@ public class Repositorio {
 		for(Mensagem m : mensagens.values()) {
 			if(m.getId() > maiorId) { maiorId = m.getId();}
 		}
-		return maiorId;
+		return maiorId + 1;
 	}
 	
 	

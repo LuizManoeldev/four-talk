@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Participante {
 	protected String nome;
-	private ArrayList<Mensagem> recebidas;
-	private ArrayList<Mensagem> enviadas;
+	private ArrayList<Mensagem> recebidas = new ArrayList<>();
+	private ArrayList<Mensagem> enviadas = new ArrayList<>();
 	
 	public Participante(String nome) {
 		super();
@@ -25,19 +25,19 @@ public class Participante {
 	}
 
 	public void addRecebida(Mensagem mensagem) {
-		this.recebidas.add(mensagem);
+		recebidas.add(mensagem);
 	}
 	
 	public void addEnviada(Mensagem mensagem) {
-		this.enviadas.add(mensagem);
+		enviadas.add(mensagem);
 	}
 	
 	public void removerRecebida(Mensagem mensagem) {
-		this.recebidas.remove(mensagem);
+		recebidas.remove(mensagem);
 	}
 	
 	public void removerEnviada(Mensagem mensagem) {
-		this.enviadas.remove(mensagem);
+		enviadas.remove(mensagem);
 	}
 	
 	public Mensagem localizarEnviada(int id) {
@@ -59,8 +59,7 @@ public class Participante {
 	public String toString() {
 		return "nome= " + nome;
 	}
-	//remover enviadas
-	//remover recebidas
+	
 	
 
 }

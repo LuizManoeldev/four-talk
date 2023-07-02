@@ -7,7 +7,7 @@ public class Mensagem {
 	private String texto;
 	private Participante emitente;
 	private Participante Destinatario;
-	private LocalDateTime datahora;
+	private LocalDateTime datahora = LocalDateTime.now();
 	
 	public Mensagem(int id, Participante emitente, Participante destinatario, String texto) {
 		super();
@@ -15,6 +15,7 @@ public class Mensagem {
 		this.texto = texto;
 		this.emitente = emitente;
 		Destinatario = destinatario;
+		
 	}
 
 	public int getId() {
@@ -53,10 +54,18 @@ public class Mensagem {
 		return datahora;
 	}
 
-	public void setDatahora(LocalDateTime datahora) {
-		this.datahora = datahora;
+	public void setDatahora() {
+		this.datahora = LocalDateTime.now();
 	}
 	
+	public String toString() {
+		return this.getId() + ":"				 +
+			   " Emitente= " + this.getEmitente() +
+			   " Destinatario= " + this.getDestinatario() +
+			   " Data= " + this.getData() +
+			   " Texto= " + this.getTexto();
+			   
+	}
 	
 	
 	

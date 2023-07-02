@@ -1,5 +1,6 @@
 package regras_negocio;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.function.Predicate;
@@ -132,7 +133,7 @@ public class Fachada {
 			throw new Exception("remover grupo - grupo nao existe");
 		
 		//verificar se individuo nao esta no grupo
-		if(individuo.localizarGrupo(nomegrupo).equals(grupo) == false)
+		if(individuo.localizarGrupo(nomegrupo) != nomegrupo)
 			throw new Exception("remover grupo - nao faz parte do grupo");	
 		
 		//remover individuo com o grupo e vice-versa
@@ -142,6 +143,7 @@ public class Fachada {
 
 	
 	public static void criarMensagem(String nomeemitente, String nomedestinatario, String texto) throws Exception{
+		
 		if(texto.isEmpty()) 
 			throw new Exception("criar mensagem - texto vazio:");
 
@@ -222,12 +224,11 @@ public class Fachada {
 					if(t.getId() == m.getId()) {
 						t.getDestinatario().removerRecebida(t);
 						repositorio.remover(t);	
-						return true;		//apaga mensagem da lista
+						return true;		
 					}
 					else
 						return false;
 				}
-
 			});
 
 		}
@@ -235,10 +236,24 @@ public class Fachada {
 
 	public static ArrayList<Mensagem> espionarMensagens(String nomeadministrador, String termo) throws Exception{
 		//localizar individuo no repositorio
+		Individual ind = repositorio.localizarIndividual(nomeadministrador);	
+		if(ind == null) 
+			throw new Exception("espionar mensagens - nome nao existe:" + nomeadministrador);
+		
 		//verificar se individuo é administrador
+		if(ind.getAdministrador() == false) {
+			throw new Exception("espionar mensagens - nao é administrador");
+		}
 		//listar as mensagens que contem o termo no texto
+		ArrayList<Mensagem> selecionadas = new ArrayList<>();
+		ArrayList<Mensagem> todas = repositorio.getMenssagens();		
 		//contains(termo)
-		return null;
+		for (Mensagem m : todas) {
+			if(m.getTexto().contains(termo)) {
+				selecionadas.add(m);
+			}
+		}
+		return selecionadas;
 	}
 
 	public static ArrayList<String> ausentes(String nomeadministrador) throws Exception{

@@ -27,10 +27,14 @@ public class Teste1 {
 			Fachada.criarIndividuo("joao", "123");
 			Fachada.criarIndividuo("maria", "123");
 			Fachada.criarIndividuo("jose", "123");
+			Fachada.listarIndividuos();
 			System.out.println("criou individuos");
 		} catch (Exception e) 	{
 			System.out.println(e.getMessage());
+			
 		}
+		
+		// SAVEPOINT
 
 		/**
 		 * MENSAGEM
@@ -185,6 +189,7 @@ public class Teste1 {
 
 		System.out.println("fim do programa");
 	}
+
 
 
 

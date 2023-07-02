@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Individual extends Participante {
 	private String senha;
 	private boolean administrador = false;
-	private ArrayList<Grupo> grupos;
+	private ArrayList<Grupo> grupos = new ArrayList<>();
 	
 	
 
@@ -37,20 +37,21 @@ public class Individual extends Participante {
 	}
 
 	public void addGrupo(Grupo grupo) {
-		this.grupos.add(grupo);
+		grupos.add(grupo);
 	}
 	
 	public void removerGrupo(Grupo grupo) {
-		this.grupos.remove(grupo);
+		grupos.remove(grupo);
 	}
 	
-	public Grupo localizarGrupo(String nome) {
+	public String localizarGrupo(String nome) {
 		Grupo grupo = null;
 		
+		
 		for(Grupo g : grupos) {
-			if(g.getNome()== nome) { grupo = g;}
+			if(g.getNome() == nome) { grupo = g;}
 		}
-		return grupo;
+		return grupo.getNome();
 	}
 	
 	
