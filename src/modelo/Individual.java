@@ -44,14 +44,13 @@ public class Individual extends Participante {
 		grupos.remove(grupo);
 	}
 	
-	public String localizarGrupo(String nome) {
+	public Grupo localizarGrupo(String nome) {
 		Grupo grupo = null;
-		
 		
 		for(Grupo g : grupos) {
 			if(g.getNome() == nome) { grupo = g;}
 		}
-		return grupo.getNome();
+		return grupo;
 	}
 	
 	

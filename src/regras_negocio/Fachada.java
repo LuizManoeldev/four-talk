@@ -1,8 +1,8 @@
 package regras_negocio;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.function.Predicate;
 
 import modelo.Grupo;
@@ -56,7 +56,9 @@ public class Fachada {
 
 
 		Individual individuo = new Individual(nome,senha, false);
-		repositorio.adicionar(individuo);		
+		repositorio.adicionar(individuo);
+		
+		repositorio.salvarObjetos();
 	}
 	
 	// 2 - Check
@@ -83,6 +85,8 @@ public class Fachada {
 			throw new Exception("criar administrador - ja e administrador");
 		
 		individuo.setAdministrador(true);
+		
+		repositorio.salvarObjetos();
 	}
 
 	
@@ -96,6 +100,8 @@ public class Fachada {
 		//criar o grupo	
 		Grupo grupo = new Grupo(nome);
 		repositorio.adicionar(grupo);
+		
+		repositorio.salvarObjetos();
 	}
 	
 	// 5 - Check 
@@ -111,13 +117,16 @@ public class Fachada {
 			throw new Exception("inserir grupo - grupo nao existe");
 		
 		//verificar se individuo nao esta no grupo
-		if(individuo.localizarGrupo(nomegrupo).equals(grupo) == true)
-			throw new Exception("inserir grupo - ja faz parte do grupo");
-		
+		if( individuo.localizarGrupo(nomegrupo) != null)
+			if(individuo.localizarGrupo(nomegrupo).equals(grupo) == true)
+				throw new Exception("inserir grupo - ja faz parte do grupo");
+		else {
 		//adicionar individuo com o grupo e vice-versa
 		individuo.addGrupo((Grupo)grupo);
 		grupo.adicionar(individuo);
+		}
 		
+		repositorio.salvarObjetos();
 	}
 	
 	// 6 - Check	
@@ -133,12 +142,15 @@ public class Fachada {
 			throw new Exception("remover grupo - grupo nao existe");
 		
 		//verificar se individuo nao esta no grupo
-		if(individuo.localizarGrupo(nomegrupo) != nomegrupo)
-			throw new Exception("remover grupo - nao faz parte do grupo");	
+		if(individuo.localizarGrupo(nomegrupo) != null)
+			if(individuo.localizarGrupo(nomegrupo).equals(grupo) != true)
+				throw new Exception("remover grupo - nao faz parte do grupo");	
 		
 		//remover individuo com o grupo e vice-versa
 		individuo.removerGrupo(grupo);
 		grupo.remover(individuo);
+		
+		repositorio.salvarObjetos();
 	}
 
 	
@@ -185,20 +197,56 @@ public class Fachada {
 				repositorio.adicionar(mensagem);
 			}	
 		}
+		
+		repositorio.salvarObjetos();
 	}
 
-	public static ArrayList<Mensagem> obterConversa(String nomeindividuo, String nomedestinatario) throws Exception{
+public static ArrayList<Mensagem> obterConversa(String nomeindividuo, String nomedestinatario) throws Exception{
+		
 		//localizar emitente no repositorio
+		Individual emitente = repositorio.localizarIndividual(nomeindividuo);
+		
 		//localizar destinatario no repositorio
+		Participante destinatario = repositorio.localizarParticipante(nomedestinatario);
+		
 		//obter do emitente a lista  enviadas
-		//obter do emitente a lista  recebidas
+		ArrayList<Mensagem> enviadasEmit = new ArrayList<>();
+		for(Mensagem m : emitente.getEnviadas()) {
+			enviadasEmit.add(m);
+			
+		}
+ 
+		
+		//obter do destinatario a lista  enviadas
+		ArrayList<Mensagem> enviadasDest = new ArrayList<>();
+		for(Mensagem m : destinatario.getEnviadas()) {
+			enviadasDest.add(m);
+		}
 		
 		//criar a lista conversa
+		ArrayList<Mensagem> conversa = new ArrayList<>();
 		//Adicionar na conversa as mensagens da lista enviadas cujo destinatario é igual ao parametro destinatario
-		//Adicionar na conversa as mensagens da lista recebidas cujo emitente é igual ao parametro destinatario
+		for(Mensagem m : enviadasEmit) {
+			if(m.getDestinatario().equals(destinatario)) {
+				conversa.add(m);
+			}
+			
+		}
+		//Adicionar na conversa as mensagens da lista recebidas cujo destinatario é igual ao parametro destinatario
+		for(Mensagem m : enviadasDest) {
+			if(m.getDestinatario().equals(emitente)) {
+				conversa.add(m);
+			}
+			
+		}
+		
 		//ordenar a lista conversa pelo id das mensagens
+        Collections.sort(conversa,Comparator.comparingInt(Mensagem::getId));
+
 		//retornar a lista conversa
-		return null;
+		return conversa;
+		
+		
 	}
 
 	public static void apagarMensagem(String nomeindividuo, int id) throws  Exception{
@@ -232,6 +280,8 @@ public class Fachada {
 			});
 
 		}
+		
+		repositorio.salvarObjetos();
 	}
 
 	public static ArrayList<Mensagem> espionarMensagens(String nomeadministrador, String termo) throws Exception{
@@ -258,9 +308,25 @@ public class Fachada {
 
 	public static ArrayList<String> ausentes(String nomeadministrador) throws Exception{
 		//localizar individuo no repositorio
+		Individual individuo = repositorio.localizarIndividual(nomeadministrador);
+		if(individuo == null) 
+			throw new Exception("ausentes - nome nao existe:" + nomeadministrador);
 		//verificar se individuo é administrador
+		if(individuo.getAdministrador() == false)
+			throw new Exception("ausentes - " + nomeadministrador + " não é administrador");
 		//listar os nomes dos participante que nao enviaram mensagens = individuos com arrylist enviadas vazio
-		return null;
+		ArrayList<Individual> listaGeral = repositorio.getIndividuos();
+		ArrayList<String> ausentes = new ArrayList<>();
+		
+		for(Individual ind : listaGeral) {
+			if(ind.getEnviadas().size() == 0) {
+				ausentes.add(ind.getNome());
+			}
+		}
+		
+		
+		
+		return ausentes;
 	}
 
 }

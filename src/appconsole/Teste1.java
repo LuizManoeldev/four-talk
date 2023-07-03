@@ -24,6 +24,7 @@ public class Teste1 {
 		 */
 		try {
 			System.out.println("\ncriar individuos");
+			Fachada.criarIndividuo("admin","admin");
 			Fachada.criarIndividuo("joao", "123");
 			Fachada.criarIndividuo("maria", "123");
 			Fachada.criarIndividuo("jose", "123");
