@@ -15,7 +15,12 @@ public class Fachada {
 	private Fachada() {}
 
 	private static Repositorio repositorio = new Repositorio();
-
+	
+	
+	
+	public static void carregar() {
+		repositorio.carregarObjetos();
+	}
 
 	public static ArrayList<Individual> listarIndividuos() {
 		return repositorio.getIndividuos();	
@@ -67,7 +72,7 @@ public class Fachada {
 		
 		if (individuo == null) 
 			throw new Exception("validar individuo - individuo inexistente");
-		if (individuo.getSenha() != senha)
+		if (individuo.getSenha().equals(senha) == false)
 			throw new Exception("validar individuo - senha incorreta");
 		
 		return individuo;

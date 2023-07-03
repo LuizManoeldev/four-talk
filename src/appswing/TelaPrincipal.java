@@ -14,6 +14,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 
 import modelo.Individual;
+import regras_negocio.Fachada;
 
 public class TelaPrincipal {
 	private JFrame frame;
@@ -58,6 +59,7 @@ public class TelaPrincipal {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		Fachada.carregar();
 		frame = new JFrame();
 		frame.setTitle("4TALK - Sem Participante logado");
 		frame.setBounds(100, 100, 450, 300);
@@ -68,7 +70,7 @@ public class TelaPrincipal {
 		label = new JLabel("New label");
 		label.setBounds(0, 0, 471, 251);
 		frame.getContentPane().add(label);
-		ImageIcon imagem = new ImageIcon(getClass().getResource("/imagens/imagem.png"));
+		ImageIcon imagem = new ImageIcon(getClass().getResource("../imagens/imagem.jpg"));
 		imagem = new ImageIcon(imagem.getImage().getScaledInstance(label.getWidth(),label.getHeight(), Image.SCALE_DEFAULT));
 		label.setIcon(imagem);
 		
