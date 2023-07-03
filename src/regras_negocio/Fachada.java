@@ -63,7 +63,7 @@ public class Fachada {
 		Individual individuo = new Individual(nome,senha, false);
 		repositorio.adicionar(individuo);
 		
-		repositorio.salvarObjetos();
+		//repositorio.salvarObjetos();
 	}
 	
 	// 2 - Check
@@ -91,7 +91,7 @@ public class Fachada {
 		
 		individuo.setAdministrador(true);
 		
-		repositorio.salvarObjetos();
+		//repositorio.salvarObjetos();
 	}
 
 	
@@ -106,7 +106,7 @@ public class Fachada {
 		Grupo grupo = new Grupo(nome);
 		repositorio.adicionar(grupo);
 		
-		repositorio.salvarObjetos();
+		//repositorio.salvarObjetos();
 	}
 	
 	// 5 - Check 
@@ -125,13 +125,13 @@ public class Fachada {
 		if( individuo.localizarGrupo(nomegrupo) != null)
 			if(individuo.localizarGrupo(nomegrupo).equals(grupo) == true)
 				throw new Exception("inserir grupo - ja faz parte do grupo");
-		else {
+		
 		//adicionar individuo com o grupo e vice-versa
 		individuo.addGrupo((Grupo)grupo);
 		grupo.adicionar(individuo);
-		}
 		
-		repositorio.salvarObjetos();
+		
+		//repositorio.salvarObjetos();
 	}
 	
 	// 6 - Check	
@@ -155,7 +155,7 @@ public class Fachada {
 		individuo.removerGrupo(grupo);
 		grupo.remover(individuo);
 		
-		repositorio.salvarObjetos();
+		//repositorio.salvarObjetos();
 	}
 
 	
@@ -164,7 +164,7 @@ public class Fachada {
 		if(texto.isEmpty()) 
 			throw new Exception("criar mensagem - texto vazio:");
 
-		Individual emitente = repositorio.localizarIndividual(nomeemitente);	
+		Participante emitente = repositorio.localizarParticipante(nomeemitente);	
 		if(emitente == null) 
 			throw new Exception("criar mensagem - emitente nao existe:" + nomeemitente);
 
@@ -172,38 +172,46 @@ public class Fachada {
 		if(destinatario == null) 
 			throw new Exception("criar mensagem - destinatario nao existe:" + nomeemitente);
 
-		if(destinatario instanceof Grupo g && emitente.localizarGrupo(g.getNome())== null)
+		if(destinatario instanceof Grupo g && ((Individual) emitente).localizarGrupo(g.getNome())== null)
 			throw new Exception("criar mensagem - grupo nao permitido:" + nomedestinatario);
-
+			
 		//gerar id no repositorio para a mensagem -- Pegar o ultimo id += 1
 		int id = repositorio.maiorId();
 		
 		//criar mensagem
 		Mensagem mensagem = new Mensagem(id, emitente,destinatario ,texto);
 		
-		//adicionar mensagem ao emitente e destinatario
-		emitente.addEnviada(mensagem);
-		destinatario.addRecebida(mensagem);
+		if(destinatario instanceof Individual)
+			//adicionar mensagem ao emitente e destinatario
+			emitente.addEnviada(mensagem);
+			destinatario.addRecebida(mensagem);
 		
-		//adicionar mensagem ao repositorio
-		repositorio.adicionar(mensagem);
+			//adicionar mensagem ao repositorio
+			repositorio.adicionar(mensagem);
 		
 		//caso destinatario seja tipo Grupo então criar copias da mensagem, tendo o grupo como emitente e cada membro do grupo como destinatario, 
 		if(destinatario instanceof Grupo) {
-			Grupo grupo = (Grupo) destinatario;
-			// Mudando o formato da mensagem para = nome/texto
-			String nova_mensagem = emitente.getNome() + "/" + mensagem.getTexto();
-			mensagem.setTexto(nova_mensagem);
+			emitente.addEnviada(mensagem);
+			repositorio.adicionar(mensagem);
 			
-			for(Individual ind : grupo.getIndividuos()) {
-				if(ind.equals(emitente) == false)
-					ind.addRecebida(mensagem);
-				//  usando mesmo id e texto, e adicionar essas copias no repositorio
-				repositorio.adicionar(mensagem);
+			Grupo grupo = (Grupo) destinatario;
+			ArrayList<Individual> individuosGrupo= grupo.getIndividuos();
+			
+			// Mudando o formato da mensagem para = nome/texto
+			String nova_mensagem = emitente.getNome() + " / " + mensagem.getTexto();
+			
+			
+			
+			for(Individual individuo : individuosGrupo) {
+				if(individuo.equals(emitente) == false && individuo.equals(destinatario) == false) {
+					Mensagem mensagemGrupo = new Mensagem(id, ((Participante)grupo), ((Participante)individuo), nova_mensagem);
+					individuo.addRecebida(mensagemGrupo);
+					repositorio.adicionar(mensagemGrupo);
+				}
 			}	
 		}
 		
-		repositorio.salvarObjetos();
+		//repositorio.salvarObjetos();
 	}
 
 public static ArrayList<Mensagem> obterConversa(String nomeindividuo, String nomedestinatario) throws Exception{
@@ -220,8 +228,7 @@ public static ArrayList<Mensagem> obterConversa(String nomeindividuo, String nom
 			enviadasEmit.add(m);
 			
 		}
- 
-		
+ 		
 		//obter do destinatario a lista  enviadas
 		ArrayList<Mensagem> enviadasDest = new ArrayList<>();
 		for(Mensagem m : destinatario.getEnviadas()) {
@@ -286,7 +293,7 @@ public static ArrayList<Mensagem> obterConversa(String nomeindividuo, String nom
 
 		}
 		
-		repositorio.salvarObjetos();
+		//repositorio.salvarObjetos();
 	}
 
 	public static ArrayList<Mensagem> espionarMensagens(String nomeadministrador, String termo) throws Exception{

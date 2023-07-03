@@ -61,9 +61,9 @@ public class Mensagem {
 	public String toString() {
 		return this.getId() + ":"				 +
 			   " Emitente= " + this.getEmitente() +
-			   " Destinatario= " + this.getDestinatario() +
-			   " Data= " + this.getData() +
-			   " Texto= " + this.getTexto();
+			   ", Destinatario= " + this.getDestinatario() +
+			   ", Data= " + this.getData() +
+			   ", Texto= " + this.getTexto();
 			   
 	}
 	

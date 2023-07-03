@@ -102,6 +102,7 @@ public class Teste1 {
 			Fachada.criarMensagem("maria", "grupo1", "vamos conversar sobre o projeto hoje");
 			Fachada.criarMensagem("maria", "grupo1", "vamos conversar sobre o projeto amanha");
 			System.out.println("criou mensagens");
+		
 		} catch (Exception e) 	{
 			System.out.println(e.getMessage());
 		}
@@ -141,9 +142,9 @@ public class Teste1 {
 		}
 
 		try {
-			System.out.println("\nremover jose do grupo");
-			Fachada.removerGrupo("jose", "grupo1");
-			System.out.println("removeu do grupo");
+			//System.out.println("\nremover jose do grupo");
+			//Fachada.removerGrupo("jose", "grupo1");
+			//System.out.println("removeu do grupo");
 
 		} catch (Exception e) 	{
 			System.out.println(e.getMessage());

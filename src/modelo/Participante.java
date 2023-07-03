@@ -57,7 +57,7 @@ public class Participante {
 	}
 	
 	public String toString() {
-		return "nome= " + nome;
+		return nome;
 	}
 	
 	
