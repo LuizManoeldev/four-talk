@@ -3,6 +3,7 @@ package regras_negocio;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.function.Predicate;
 
 import modelo.Grupo;
@@ -42,9 +43,12 @@ public class Fachada {
 			}
 		}
 		
-		 Collections.sort(todasMensagens,Comparator.comparingInt(Mensagem::getId));
+		HashSet<Mensagem> hashSet = new HashSet<>(todasMensagens);
+		ArrayList<Mensagem> Mensagens = new ArrayList<>(hashSet);
 		
-		return todasMensagens;
+		Collections.sort(Mensagens,Comparator.comparingInt(Mensagem::getId));
+		
+		return Mensagens;
 	}
 
 	public static ArrayList<Mensagem> listarMensagensEnviadas(String nome) throws Exception{
@@ -78,7 +82,7 @@ public class Fachada {
 		Individual individuo = new Individual(nome,senha, false);
 		repositorio.adicionar(individuo);
 		
-		//repositorio.salvarObjetos();
+		repositorio.salvarObjetos();
 	}
 	
 	// 2 - Check
@@ -106,7 +110,7 @@ public class Fachada {
 		
 		individuo.setAdministrador(true);
 		
-		//repositorio.salvarObjetos();
+		repositorio.salvarObjetos();
 	}
 	
 	public static ArrayList<Individual> getGrupo(String nome) {
@@ -132,7 +136,7 @@ public class Fachada {
 		Grupo grupo = new Grupo(nome);
 		repositorio.adicionar(grupo);
 		
-		//repositorio.salvarObjetos();
+		repositorio.salvarObjetos();
 	}
 	
 	// 5 - Check 
@@ -157,7 +161,7 @@ public class Fachada {
 		grupo.adicionar(individuo);
 		
 		
-		//repositorio.salvarObjetos();
+		repositorio.salvarObjetos();
 	}
 	
 	// 6 - Check	
@@ -181,7 +185,7 @@ public class Fachada {
 		individuo.removerGrupo(grupo);
 		grupo.remover(individuo);
 		
-		//repositorio.salvarObjetos();
+		repositorio.salvarObjetos();
 	}
 
 	
@@ -238,16 +242,18 @@ public class Fachada {
 			}	
 		}
 		
-		//repositorio.salvarObjetos();
+		repositorio.salvarObjetos();
 	}
 
 public static ArrayList<Mensagem> obterConversa(String nomeindividuo, String nomedestinatario) throws Exception{
 		
-		//localizar emitente no repositorio
-		Individual emitente = repositorio.localizarIndividual(nomeindividuo);
-		
-		//localizar destinatario no repositorio
-		Participante destinatario = repositorio.localizarParticipante(nomedestinatario);
+	Participante emitente = repositorio.localizarParticipante(nomeindividuo);	
+	if(emitente == null) 
+		throw new Exception("O mensagem - emitente nao existe:" + nomeindividuo);
+
+	Participante destinatario = repositorio.localizarParticipante(nomedestinatario);	
+	if(destinatario == null) 
+		throw new Exception("Obter mensagem - destinatario nao existe:" + nomedestinatario);
 		
 		ArrayList<Mensagem> repMensagens = Fachada.listarMensagens();
 		
@@ -260,43 +266,7 @@ public static ArrayList<Mensagem> obterConversa(String nomeindividuo, String nom
 			}
 		}
 		
-		/*
-		//obter do emitente a lista  enviadas
-		ArrayList<Mensagem> enviadasEmit = new ArrayList<>();
-		for(Mensagem m : emitente.getEnviadas()) {
-			enviadasEmit.add(m);
-			
-		}
- 		
-		//obter do destinatario a lista  enviadas
-		ArrayList<Mensagem> enviadasDest = new ArrayList<>();
-		for(Mensagem m : destinatario.getEnviadas()) {
-			enviadasDest.add(m);
-		}
 		
-		//criar a lista conversa
-		ArrayList<Mensagem> conversa = new ArrayList<>();
-		
-		
-		//Adicionar na conversa as mensagens da lista enviadas cujo destinatario é igual ao parametro destinatario
-		for(Mensagem m : enviadasEmit) {
-			if((m.getDestinatario()).equals(destinatario)) {
-				conversa.add(m);
-			}
-			
-		
-		//Adicionar na conversa as mensagens da lista recebidas cujo destinatario é igual ao parametro destinatario
-		for(Mensagem m : enviadasDest) {
-			if((m.getDestinatario()).equals(emitente)) {
-				conversa.add(m);
-			}
-			
-		}
-		*/
-		//ordenar a lista conversa pelo id das mensagens
-       
-
-		//retornar a lista conversa
 		return conversa;
 		
 		
@@ -334,7 +304,7 @@ public static ArrayList<Mensagem> obterConversa(String nomeindividuo, String nom
 
 		}
 		
-		//repositorio.salvarObjetos();
+		repositorio.salvarObjetos();
 	}
 
 	public static ArrayList<Mensagem> espionarMensagens(String nomeadministrador, String termo) throws Exception{
@@ -349,7 +319,8 @@ public static ArrayList<Mensagem> obterConversa(String nomeindividuo, String nom
 		}
 		//listar as mensagens que contem o termo no texto
 		ArrayList<Mensagem> selecionadas = new ArrayList<>();
-		ArrayList<Mensagem> todas = repositorio.getMenssagens();		
+		ArrayList<Mensagem> todas = repositorio.getMenssagens();	
+		
 		//contains(termo)
 		for (Mensagem m : todas) {
 			if(m.getTexto().contains(termo)) {

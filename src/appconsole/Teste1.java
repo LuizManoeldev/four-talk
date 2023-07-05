@@ -108,11 +108,6 @@ public class Teste1 {
 		}
 
 		try {
-			System.out.println("\nRecebedias de Maria");
-			ArrayList<Mensagem> joaoM = Fachada.validarIndividuo("maria", "123").getRecebidas();
-			for (Mensagem m : joaoM) {
-				System.out.println(m);
-			}
 			System.out.println("\nconversa entre joao e grupo1");
 			for(Mensagem m : Fachada.obterConversa("joao", "grupo1"))
 				System.out.println(m);

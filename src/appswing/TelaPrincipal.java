@@ -19,6 +19,7 @@ import regras_negocio.Fachada;
 public class TelaPrincipal {
 	private JFrame frame;
 	private JMenu mnParticipante;
+	private JMenu mnGrupo;
 	private JMenu mnLogar;
 	private JMenu mnConversa;
 	private JMenu mnMensagem;
@@ -85,7 +86,27 @@ public class TelaPrincipal {
 		menuBar.add(mnParticipante);
 
 		// -----------------------------------------------------------------
+		
+		
+	
 
+		mnGrupo = new JMenu("Grupo");
+		mnGrupo.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if (TelaPrincipal.logado == null) {
+					JOptionPane.showMessageDialog(null, "Vc precisa estar logado");
+					return;
+				}
+				if (!TelaPrincipal.logado.getAdministrador()) {
+					JOptionPane.showMessageDialog(null, "Vc precisa ser administrador");
+					return;
+				}
+				TelaGrupo telaGrupo = new TelaGrupo();
+				
+			}
+		});
+		menuBar.add(mnGrupo);
+		
 		mnLogar = new JMenu("Login");
 		mnLogar.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
