@@ -29,7 +29,22 @@ public class Fachada {
 		return repositorio.getGrupos();
 	}
 	public static ArrayList<Mensagem> listarMensagens() {
-		return repositorio.getMenssagens();
+		ArrayList<Individual> todosInd = repositorio.getIndividuos();
+		ArrayList<Mensagem> todasMensagens = new ArrayList<>();
+		
+		for(Individual ind : todosInd) {
+			for(Mensagem m : ind.getEnviadas()) {
+				todasMensagens.add(m);
+			}
+			
+			for(Mensagem m : ind.getRecebidas()) {
+				todasMensagens.add(m);
+			}
+		}
+		
+		 Collections.sort(todasMensagens,Comparator.comparingInt(Mensagem::getId));
+		
+		return todasMensagens;
 	}
 
 	public static ArrayList<Mensagem> listarMensagensEnviadas(String nome) throws Exception{
@@ -93,7 +108,18 @@ public class Fachada {
 		
 		//repositorio.salvarObjetos();
 	}
-
+	
+	public static ArrayList<Individual> getGrupo(String nome) {
+		Grupo grupo = null;
+		ArrayList<Grupo> grupos = repositorio.getGrupos();
+		for (Grupo g : grupos ) {
+			if(g.getNome().equals(nome)) {
+				grupo = g;
+			}
+		}
+		
+		return grupo.getIndividuos();
+	}
 	
 	// 4 - Check
 	public static void criarGrupo(String nome) throws  Exception{
@@ -181,6 +207,7 @@ public class Fachada {
 		//criar mensagem
 		Mensagem mensagem = new Mensagem(id, emitente,destinatario ,texto);
 		
+		
 		if(destinatario instanceof Individual)
 			//adicionar mensagem ao emitente e destinatario
 			emitente.addEnviada(mensagem);
@@ -201,9 +228,9 @@ public class Fachada {
 			String nova_mensagem = emitente.getNome() + " / " + mensagem.getTexto();
 			
 			
-			
 			for(Individual individuo : individuosGrupo) {
-				if(individuo.equals(emitente) == false && individuo.equals(destinatario) == false) {
+			
+				if(individuo.equals(emitente) == false) {
 					Mensagem mensagemGrupo = new Mensagem(id, ((Participante)grupo), ((Participante)individuo), nova_mensagem);
 					individuo.addRecebida(mensagemGrupo);
 					repositorio.adicionar(mensagemGrupo);
@@ -222,6 +249,18 @@ public static ArrayList<Mensagem> obterConversa(String nomeindividuo, String nom
 		//localizar destinatario no repositorio
 		Participante destinatario = repositorio.localizarParticipante(nomedestinatario);
 		
+		ArrayList<Mensagem> repMensagens = Fachada.listarMensagens();
+		
+		//criar a lista conversa
+		ArrayList<Mensagem> conversa = new ArrayList<>();
+		
+		for(Mensagem m : repMensagens) {
+			if((m.getEmitente().getNome()).equals(nomedestinatario) && (m.getDestinatario().getNome()).equals(nomeindividuo) || (m.getEmitente().getNome()).equals(nomeindividuo) && (m.getDestinatario().getNome()).equals(nomedestinatario) ) {
+				conversa.add(m);
+			}
+		}
+		
+		/*
 		//obter do emitente a lista  enviadas
 		ArrayList<Mensagem> enviadasEmit = new ArrayList<>();
 		for(Mensagem m : emitente.getEnviadas()) {
@@ -237,23 +276,25 @@ public static ArrayList<Mensagem> obterConversa(String nomeindividuo, String nom
 		
 		//criar a lista conversa
 		ArrayList<Mensagem> conversa = new ArrayList<>();
+		
+		
 		//Adicionar na conversa as mensagens da lista enviadas cujo destinatario é igual ao parametro destinatario
 		for(Mensagem m : enviadasEmit) {
-			if(m.getDestinatario().equals(destinatario)) {
+			if((m.getDestinatario()).equals(destinatario)) {
 				conversa.add(m);
 			}
 			
-		}
+		
 		//Adicionar na conversa as mensagens da lista recebidas cujo destinatario é igual ao parametro destinatario
 		for(Mensagem m : enviadasDest) {
-			if(m.getDestinatario().equals(emitente)) {
+			if((m.getDestinatario()).equals(emitente)) {
 				conversa.add(m);
 			}
 			
 		}
-		
+		*/
 		//ordenar a lista conversa pelo id das mensagens
-        Collections.sort(conversa,Comparator.comparingInt(Mensagem::getId));
+       
 
 		//retornar a lista conversa
 		return conversa;
